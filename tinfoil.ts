@@ -387,12 +387,13 @@ export default async function (pi: ExtensionAPI) {
 			stream: (model, context, options) =>
 				lazyStream(model, async () => {
 					await ensureVerified();
-					return streams.stream(model, context, { ...options, fetch: secureClient.fetch });
+					// Models may carry a stale baseUrl (registered before a /tinfoil re-verify); pin to the verified enclave.
+					return streams.stream({ ...model, baseUrl: baseUrlOf() }, context, { ...options, fetch: secureClient.fetch });
 				}),
 			streamSimple: (model, context, options) =>
 				lazyStream(model, async () => {
 					await ensureVerified();
-					return streams.streamSimple(model, context, { ...options, fetch: secureClient.fetch });
+					return streams.streamSimple({ ...model, baseUrl: baseUrlOf() }, context, { ...options, fetch: secureClient.fetch });
 				}),
 		};
 	};
