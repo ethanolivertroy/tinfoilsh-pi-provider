@@ -97,6 +97,8 @@ function toModel(raw: TinfoilApiModel, baseUrl: string): Model<"openai-completio
 		},
 		contextWindow,
 		maxTokens: raw.max_tokens ?? deriveMaxTokens(contextWindow),
+		// Tinfoil's open-weight backends reject the OpenAI-only `developer` role.
+		compat: { supportsDeveloperRole: false },
 	};
 }
 
